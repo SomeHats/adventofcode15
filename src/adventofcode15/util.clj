@@ -1,5 +1,6 @@
 (ns adventofcode15.util
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.pprint :refer [pprint]]))
 
 (defmacro defpuzzle
   "Define puzzles and solutions!"
@@ -9,9 +10,8 @@
      (println "===========================")
      (let [~'result ~(conj solution 'do)]
        (println "===========================")
-       (println (str "Result: " (if (seq? ~'result)
-                                  (into [] ~'result)
-                                  ~'result))))))
+       (println "Result")
+       (pprint ~'result))))
 
 (defn ask
   "Ask the user for some input"

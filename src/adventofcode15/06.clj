@@ -63,15 +63,24 @@
        (str/join "\n")
        (println)))
 
-(defpuzzle "Day 6: Probably a Fire Hazard"
-  (let [lights (get-lights
-                 (read-string (ask "Light array width:"))
-                 (read-string (ask "Light array height:")))
-        is-part-2 (yes-no "Should I use the part 2 instruction set?")
-        instructions (parse-instructions (ask "Instructions:") (if is-part-2 actions-2 actions-1))
-        should-print (yes-no "Should I print the resulting light array?")
-        new-lights (apply-instructions instructions lights)]
-    (when should-print (print-lights new-lights))
-    (->> new-lights
-         (flatten)
-         (reduce +))))
+;; (defpuzzle "Day 6: Probably a Fire Hazard"
+;;   (let [lights (get-lights
+;;                  (read-string (ask "Light array width:"))
+;;                  (read-string (ask "Light array height:")))
+;;         is-part-2 (yes-no "Should I use the part 2 instruction set?")
+;;         instructions (parse-instructions (ask "Instructions:") (if is-part-2 actions-2 actions-1))
+;;         should-print (yes-no "Should I print the resulting light array?")
+;;         new-lights (apply-instructions instructions lights)]
+;;     (when should-print (print-lights new-lights))
+;;     (->> new-lights
+;;          (flatten)
+;;          (reduce +))))
+
+(defn -main [& args]
+  (time (dotimes [n 10]
+    (time (let [instructions (parse-instructions (slurp "/Users/somehats/Projects/clojure/adventofcode15/resources/day6.txt") actions-2)]
+            (->> (get-lights 1000 1000)
+                 (apply-instructions instructions)
+                 (flatten)
+                 (reduce +)
+                 (println)))))))
