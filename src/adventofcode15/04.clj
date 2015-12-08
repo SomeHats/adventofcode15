@@ -19,6 +19,6 @@
        (first)))
 
 (defpuzzle "Day 4: The Ideal Stocking Stuffer"
-  (let [input (ask "Secret key:")
-        pattern (re-pattern (ask "Pattern:"))]
-    (solve input pattern)))
+  [input (ask "Secret key:")
+   pattern (re-pattern (ask "Pattern:"))]
+  (solve input pattern))

@@ -4,14 +4,16 @@
 
 (defmacro defpuzzle
   "Define puzzles and solutions!"
-  [title & solution]
+  [title bindings & solution]
   `(defn ~'-main ~title []
      (println ~(str "*** " title " ***"))
      (println "===========================")
-     (let [~'result ~(conj solution 'do)]
+     (let ~bindings
        (println "===========================")
-       (println "Result")
-       (pprint ~'result))))
+       (let [~'result (time ~(conj solution 'do))]
+         (println "===========================")
+         (println "Result")
+         (pprint ~'result)))))
 
 (defn ask
   "Ask the user for some input"

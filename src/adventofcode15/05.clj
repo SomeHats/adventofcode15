@@ -17,6 +17,6 @@
        (re-find #"(.).\1" string))) ; Letter repeating with another letter in between
 
 (defpuzzle "Day 5: Doesn't He Have Intern-Elves For This?"
-  (let [strings (str/split (ask "Gimme dem strings") #"\n")]
-    {:old-rules (count (filter old-nice? strings))
-     :new-rules (count (filter new-nice? strings))}))
+  [strings (str/split (ask "Gimme dem strings") #"\n")]
+  {:old-rules (count (filter old-nice? strings))
+   :new-rules (count (filter new-nice? strings))})

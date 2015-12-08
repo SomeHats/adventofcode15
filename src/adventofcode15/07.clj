@@ -91,10 +91,10 @@
   (into {} instructions))
 
 (defpuzzle "Day 7: Some Assembly Required"
-  (let [instructions (parse-instructions (ask "Instructions:"))
-        circuit (build-circuit instructions)
-        lookup-node (ask "Node to read value from:")
-        override-node (ask "Node to override:")
+  [instructions (ask "Instructions:")
+   lookup-node (ask "Node to read value from:")
+   override-node (ask "Node to override:")]
+  (let [circuit (build-circuit (parse-instructions instructions))
         part-1 (lookup lookup-node circuit)
         overridden-circuit (assoc circuit override-node {:type :CACHED :val part-1})
         part-2 (lookup lookup-node overridden-circuit)]

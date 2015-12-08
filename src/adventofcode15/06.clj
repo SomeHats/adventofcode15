@@ -44,17 +44,28 @@
         ys (range y1 (inc y2))]
     (cartesian-product xs ys)))
 
-(defn apply-instruction
+(defn update-light!
+  "Update a single light"
+  [lights x y action]
+  (let [row (get lights y)
+        light (get row x)]
+    (assoc! row x (action light))
+    lights))
+
+(defn apply-instruction!
   "Apply a single instruction to a set of lights"
   [lights {:keys [action start end]}]
-  (reduce (fn [lights [x y]] (update-in lights [y x] action))
+  (reduce (fn [lights [x y]] (update-light! lights x y action))
           lights
           (rect start end)))
 
 (defn apply-instructions
   "Apply a sequence of instructions to a set of lights"
   [instructions lights]
-  (reduce apply-instruction lights instructions))
+  (let [mut-lights (transient (vec (map transient lights)))]
+    (->> (reduce apply-instruction! mut-lights instructions)
+         (persistent!)
+         (map persistent!))))
 
 (defn print-lights
   [lights]
@@ -63,24 +74,16 @@
        (str/join "\n")
        (println)))
 
-;; (defpuzzle "Day 6: Probably a Fire Hazard"
-;;   (let [lights (get-lights
-;;                  (read-string (ask "Light array width:"))
-;;                  (read-string (ask "Light array height:")))
-;;         is-part-2 (yes-no "Should I use the part 2 instruction set?")
-;;         instructions (parse-instructions (ask "Instructions:") (if is-part-2 actions-2 actions-1))
-;;         should-print (yes-no "Should I print the resulting light array?")
-;;         new-lights (apply-instructions instructions lights)]
-;;     (when should-print (print-lights new-lights))
-;;     (->> new-lights
-;;          (flatten)
-;;          (reduce +))))
-
-(defn -main [& args]
-  (time (dotimes [n 10]
-    (time (let [instructions (parse-instructions (slurp "/Users/somehats/Projects/clojure/adventofcode15/resources/day6.txt") actions-2)]
-            (->> (get-lights 1000 1000)
-                 (apply-instructions instructions)
-                 (flatten)
-                 (reduce +)
-                 (println)))))))
+(defpuzzle "Day 6: Probably a Fire Hazard"
+  [width (read-string (ask "Light array width:"))
+   height (read-string (ask "Light array height:"))
+   is-part-2 (yes-no "Should I use the part 2 instruction set?")
+   should-print (yes-no "Should I print the resulting light array")
+   str-instructions (ask "Instructions:")]
+  (let [lights (get-lights width height)
+        instructions (parse-instructions str-instructions (if is-part-2 actions-2 actions-1))
+        new-lights (apply-instructions instructions lights)]
+    (when should-print (print-lights new-lights))
+    (->> new-lights
+         (flatten)
+         (reduce +))))

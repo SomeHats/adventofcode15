@@ -17,7 +17,7 @@
              (inc position) (first remaining) (rest remaining)))))
 
 (defpuzzle "Day 1: Not Quite Lisp"
-  (let [input (str/split (ask "Enter the input:") #"")
-        stop-at-basement (yes-no "Should I stop at the basement?")]
-    (solve input stop-at-basement)))
+  [input (str/split (ask "Enter the input:") #"")
+   stop-at-basement (yes-no "Should I stop at the basement?")]
+  (solve input stop-at-basement))
 
