@@ -61,29 +61,20 @@
        (map #(if (= %1 \1) true false))
        (pad 16 false)))
 
-(defn lookup!
-  "find and calculate a value in the circuit, using a transient copy of the circuit for caching"
+(def lookup (memoize (fn
   [sym circuit]
   (if (re-matches #"\d+" sym)
     (int->b (read-string sym))
     (if-let [node (get circuit sym false)]
-      ;; ((get ops (:type node) op-not-found) circuit node)
-      (let [val (case (:type node)
-                  :CACHED (:val node)
-                  :NOT (let [{:keys [rhs]} node] (b-not (lookup! rhs circuit)))
-                  :AND (let [{:keys [lhs rhs]} node] (b-and (lookup! lhs circuit) (lookup! rhs circuit)))
-                  :OR (let [{:keys [lhs rhs]} node] (b-or (lookup! lhs circuit) (lookup! rhs circuit)))
-                  :LSHIFT (let [{:keys [lhs rhs]} node] (b-lshift (lookup! lhs circuit) (b->int (lookup! rhs circuit))))
-                  :RSHIFT (let [{:keys [lhs rhs]} node] (b-rshift (lookup! lhs circuit) (b->int (lookup! rhs circuit))))
-                  :FORWARD (let [{:keys [value]} node] (lookup! value circuit)))]
-        (assoc! circuit sym {:type :CACHED :val val})
-        val)
-      (throw (.Exception (str "Cannot find node " sym))))))
-
-(defn lookup
-  "Find and calculate a value in the circuit"
-  [sym circuit]
-  (lookup! sym (transient circuit)))
+      (case (:type node)
+        :CACHED (:val node)
+        :NOT (let [{:keys [rhs]} node] (b-not (lookup rhs circuit)))
+        :AND (let [{:keys [lhs rhs]} node] (b-and (lookup lhs circuit) (lookup rhs circuit)))
+        :OR (let [{:keys [lhs rhs]} node] (b-or (lookup lhs circuit) (lookup rhs circuit)))
+        :LSHIFT (let [{:keys [lhs rhs]} node] (b-lshift (lookup lhs circuit) (b->int (lookup rhs circuit))))
+        :RSHIFT (let [{:keys [lhs rhs]} node] (b-rshift (lookup lhs circuit) (b->int (lookup rhs circuit))))
+        :FORWARD (let [{:keys [value]} node] (lookup value circuit)))
+      (throw (.Exception (str "Cannot find node " sym))))))))
 
 (defn build-circuit
   "Construct a graph from an instruction set"
