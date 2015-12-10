@@ -49,7 +49,7 @@
        (map (fn [route] {:route route :dist (get-distance graph route)}))))
 
 (defpuzzle "Day 9: All in a Single Night"
-  [distances (ask "Distances:")]
+  [distances (ask "Distances:" "file:resources/day9.txt")]
   (let [routes (->> distances
                     (parse-distances)
                     (build-graph)

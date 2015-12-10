@@ -18,7 +18,7 @@
   (str "\"" (str/replace string #"(\"|\\)" "\\\\$1") "\""))
 
 (defpuzzle "Day 8: Matchsticks"
-  [strings (str/split (ask "Gimme dem strings") #"\n")]
+  [strings (str/split (ask "Gimme dem strings" "file:resources/day8.txt") #"\n")]
   (let [code-size (->> strings
                        (map count)
                        (reduce +))

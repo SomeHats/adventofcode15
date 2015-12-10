@@ -49,8 +49,8 @@
   [lights x y action]
   (let [row (get lights y)
         light (get row x)]
-    (assoc! row x (action light))
-    lights))
+    (assoc! lights y
+            (assoc! row x (action light)))))
 
 (defn apply-instruction!
   "Apply a single instruction to a set of lights"
@@ -75,11 +75,11 @@
        (println)))
 
 (defpuzzle "Day 6: Probably a Fire Hazard"
-  [width (read-string (ask "Light array width:"))
-   height (read-string (ask "Light array height:"))
-   is-part-2 (yes-no "Should I use the part 2 instruction set?")
-   should-print (yes-no "Should I print the resulting light array")
-   str-instructions (ask "Instructions:")]
+  [width (read-string (ask "Light array width:" "1000"))
+   height (read-string (ask "Light array height:" "1000"))
+   is-part-2 (yes-no "Should I use the part 2 instruction set?" true)
+   should-print (yes-no "Should I print the resulting light array" false)
+   str-instructions (ask "Instructions:" "file:resources/day6.txt")]
   (let [lights (get-lights width height)
         instructions (parse-instructions str-instructions (if is-part-2 actions-2 actions-1))
         new-lights (apply-instructions instructions lights)]

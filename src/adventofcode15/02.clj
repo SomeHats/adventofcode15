@@ -29,5 +29,5 @@
   (reduce + 0 (map ribbon-needed boxes)))
 
 (defpuzzle "Day 2: I Was Told There Would Be No Math"
-  [input (parse-list (ask "Input plz."))]
+  [input (parse-list (ask "Input plz." "file:resources/day2.txt"))]
   {:paper (required-paper input) :ribbon (required-ribbon input)})

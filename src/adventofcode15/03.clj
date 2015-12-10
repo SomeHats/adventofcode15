@@ -26,7 +26,7 @@
   [(take-nth 2 seq) (take-nth 2 (rest seq))])
 
 (defpuzzle "Day 3: Perfectly Spherical Houses in a Vacuum"
-  [input (str/split (ask "Directions! Gimme") #"")]
+  [input (str/split (ask "Directions! Gimme" "file:resources/day3.txt") #"")]
   {:single-santa (count (visit-houses input))
    :double-santa (let [[santa-input robo-santa-input] (uninterleave input)]
                    (count (set/union
