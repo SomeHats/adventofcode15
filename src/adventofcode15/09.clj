@@ -41,11 +41,23 @@
        (partition 2 1)
        (reduce #(+ %1 (get-in graph %2)) 0)))
 
+(defn reject-duplicate-routes
+  "Given a sequence of routes, reject any duplicates because of reversals"
+  [routes]
+  (let [found-routes (atom (transient {}))]
+    (filter (fn [route]
+              (if (get @found-routes (reverse route) false)
+                false
+                (do (swap! found-routes assoc! route true)
+                    true)))
+            routes)))
+
 (defn find-routes
   "Find the distances of all possible routes through a graph"
   [graph]
   (->> (keys graph)
        (permutations)
+       (reject-duplicate-routes)
        (map (fn [route] {:route route :dist (get-distance graph route)}))))
 
 (defpuzzle "Day 9: All in a Single Night"
