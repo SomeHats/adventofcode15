@@ -10,7 +10,8 @@
      (println "===========================")
      (let ~bindings
        (println "===========================")
-       (let [~'result (time ~(conj solution 'do))]
+       (let [~'result (time (let [~'res ~(conj solution 'do)]
+                              (if (seq? ~'res) (doall ~'res) ~'res)))]
          (println "===========================")
          (println "Result")
          (pprint ~'result)))))
